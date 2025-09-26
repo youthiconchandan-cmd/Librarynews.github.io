@@ -1,0 +1,18 @@
+<!DOCTYPE html><html><head>
+    <meta charset="utf-8" />
+    <style>
+    body{margin:0;background:#000;color:#fff;font:24px/32px sans-serif;overflow:hidden}
+    #wrap{white-space:nowrap;animation:marquee 30s linear infinite}
+    @keyframes marquee{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+    </style></head><body>
+    <div id="wrap">Loading…</div>
+    <script>
+    const url="https://docs.google.com/spreadsheets/d/e/2PACX-1vQceM7Bbz6Y0OilGKSkkRgHykxL3V88Yd503HwN2YWmGoerSRGVlQ55kXiu1acHJyUg_X1htCiPtKO6/gviz/tq?tqx=out:json&out=csv";
+    async function load(){
+      const raw=await (await fetch(url)).text();
+      const json=JSON.parse(raw.substr(47).slice(0,-2));         // strip Google wrapper
+      const rows=json.table.rows.map(r=>r.c[1].v);               // column B = headline
+      document.getElementById("wrap").innerHTML=rows.join("  •  ");
+    }
+    load(); setInterval(load,60000);                             // refresh every 60 s
+    </script></body></html>
